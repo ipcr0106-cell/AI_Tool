@@ -527,6 +527,13 @@ const tools = [
       pricing: "Paid", plan: "월 $8~10 (애드온)",
       prompt: "\"이 글의 어조를 '전문적이고 정중하게' 바꾸고, 오타를 수정해줘.\"" },
 
+    { name: "Qwen", category: "writing", identity: "알리바바 오픈소스 LLM",
+      color: "#7c3aed", logo: favicon("huggingface.co/Qwen"), url: "https://qwenlm.github.io",
+      strength: "강력한 다국어 지원. 코딩·수학·추론 능력 우수. 오픈소스로 무료 사용.",
+      weakness: "생태계가 서양권 LLM 대비 작음. 플러그인/연동 부족.",
+      pricing: "Free", plan: "무료 (오픈소스)",
+      prompt: "\"이 중국어 논문을 한국어로 요약하고 핵심 논점을 정리해줘.\"" },
+
     // ───── 리서치 작업 ─────
     { name: "ChatGPT", category: "research", identity: "표준형 AI 비서",
       color: "#10a37f", logo: favicon("chat.openai.com"), url: "https://chat.openai.com",
@@ -590,12 +597,12 @@ const tools = [
       weakness: "아직 접근성이 제한적이고 생성 속도가 느림.",
       pricing: "Paid", plan: "ChatGPT Plus 포함 ($20/월)",
       prompt: "\"시네마틱 스타일, 드론 샷. 비 젖은 사이버펑크 도시의 네온사인.\"" },
-    { name: "Veo2", category: "video-gen", identity: "사운드 통합",
-      color: "#4285f4", logo: favicon("deepmind.google"), url: "https://deepmind.google/technologies/veo/",
-      strength: "영상과 배경음악(OST)을 동시에 생성하는 완벽한 멀티모달.",
-      weakness: "구글 생태계에 종속적.",
-      pricing: "Freemium", plan: "Google AI 연동",
-      prompt: "\"자연 풍경과 어울리는 배경음악이 포함된 30초 영상을 만들어줘.\"" },
+    { name: "Veo3", category: "video-gen", identity: "네이티브 오디오 + 4K",
+      color: "#4285f4", logo: favicon("deepmind.google"), url: "https://deepmind.google/models/veo/",
+      strength: "4K 해상도 영상 생성, 대화·효과음 등 네이티브 오디오 동시 생성, 레퍼런스 이미지로 장면 일관성 유지.",
+      weakness: "구글 생태계에 종속적. 1회 생성 4~8초 제한.",
+      pricing: "Freemium", plan: "Gemini / AI Studio / Vertex AI",
+      prompt: "\"자연 풍경과 어울리는 대화와 배경음이 포함된 4K 시네마틱 영상을 만들어줘.\"" },
     { name: "Runway", category: "video-gen", identity: "모션 캡처 전문",
       color: "#6d28d9", logo: favicon("runwayml.com"), url: "https://runwayml.com",
       strength: "'Act One' 기능으로 실제 표정/동작의 실시간 캐릭터 이식.",
@@ -650,6 +657,12 @@ const tools = [
       weakness: "창작 영상보다는 정보 전달용.",
       pricing: "Free", plan: "현재 베타 무료",
       prompt: "\"이 데이터를 시각적 인포그래픽 영상으로 만들어줘.\"" },
+    { name: "Higgsfield", category: "video-gen", identity: "멀티모델 오케스트레이션",
+      color: "#1a1a2e", logo: favicon("higgsfield.ai"), url: "https://higgsfield.ai/",
+      strength: "Sora 2·Kling·Veo 등 15+모델 통합 운용. 시네마틱 카메라 컨트롤(돌리·크레인·360° 오빗) 특화. 모바일 퍼스트 소셜 마케팅 영상 대량 생산.",
+      weakness: "자체 생성 모델이 아닌 오케스트레이션 플랫폼. 외부 모델 의존.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"돌리 줌 효과로 제품을 클로즈업하는 15초 소셜 광고 영상을 만들어줘.\"" },
 
     // ───── 이미지 편집 ─────
     { name: "Photoshop", category: "image-edit", identity: "업계 표준",
@@ -744,7 +757,7 @@ const tools = [
       weakness: "무료 크레딧이 빠르게 소진됨.",
       pricing: "Freemium", plan: "Free 150토큰/일 / Artisan ($12/월)",
       prompt: "\"(Phoenix 모델) 일본 신사 앞 벚꽃이 흩날리는 수채화 스타일\"" },
-    { name: "Redraft", category: "image-gen", identity: "캐릭터 고정",
+    { name: "Recraft", category: "image-gen", identity: "캐릭터 고정",
       color: "#14b8a6", logo: favicon("recraft.ai"), url: "https://www.recraft.ai",
       strength: "기존 인물의 얼굴과 구도를 유지하며 스타일만 바꾸는 고정 생성.",
       weakness: "인지도가 낮고 기능이 제한적.",
@@ -1148,6 +1161,13 @@ const tools = [
       weakness: "자체 모델이 없음.",
       pricing: "Freemium", plan: "종량제",
       prompt: "\"여러 모델을 비교 테스트해줘.\"" },
+
+    { name: "Qwen", category: "model", identity: "알리바바 오픈소스 LLM",
+      color: "#7c3aed", logo: favicon("huggingface.co/Qwen"), url: "https://qwenlm.github.io",
+      strength: "Qwen2.5 시리즈로 코딩·수학·추론 벤치마크 상위권. 비디오 이해 능력도 우수.",
+      weakness: "중국 기반이라 일부 지역에서 접근 제한.",
+      pricing: "Free", plan: "무료 (오픈소스)",
+      prompt: "\"Qwen-72B 모델로 코드 리뷰와 최적화를 진행해줘.\"" },
 
     // ───── 로컬 AI ─────
     { name: "Pinokio", category: "local", identity: "원클릭 AI 설치",
