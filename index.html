@@ -1270,6 +1270,13 @@ function scrollToCategory(catId) {
         if (btn.dataset.cat === catId) btn.classList.add("active");
     });
 
+    // Clear search if active, re-render full list
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput.value) {
+        searchInput.value = "";
+        renderGrid();
+    }
+
     if (catId === "all") {
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
