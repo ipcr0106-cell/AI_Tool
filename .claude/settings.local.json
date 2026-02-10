@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:sora.com)",
+      "WebFetch(domain:www.vidu.com)",
+      "WebFetch(domain:hailuoai.video)",
+      "WebFetch(domain:redraft.ai)",
+      "WebFetch(domain:storm.genie.stanford.edu)",
+      "WebFetch(domain:rork.app)",
+      "WebFetch(domain:codev.com)",
+      "WebFetch(domain:crack.chat)",
+      "WebFetch(domain:tiro.ai)"
+    ]
+  }
+}

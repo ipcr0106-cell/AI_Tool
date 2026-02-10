@@ -441,12 +441,12 @@ function favicon(domain) {
 
 // Local image overrides for logos that fail to load from the internet
 const localLogos = {
-    "Liner": "Liner.webp",
-    "Ugic": "Ugic.jpg",
-    "클로바노트": "ClovaNote.png",
-    "Tiro": "Tiro.png",
-    "Story Tribe": "StoryTribe.png",
-    "ComfyUI": "ComfyUI.avif"
+    "Liner": "photo/Liner.webp",
+    "Ugic": "photo/Ugic.jpg",
+    "클로바노트": "photo/ClovaNote.png",
+    "Tiro": "photo/Tiro.png",
+    "Story Tribe": "photo/StoryTribe.png",
+    "ComfyUI": "photo/ComfyUI.avif"
 };
 
 const tools = [
@@ -730,7 +730,7 @@ const tools = [
       pricing: "Freemium", plan: "Free 150토큰/일 / Artisan ($12/월)",
       prompt: "\"(Phoenix 모델) 일본 신사 앞 벚꽃이 흩날리는 수채화 스타일\"" },
     { name: "Redraft", category: "image-gen", identity: "캐릭터 고정",
-      color: "#14b8a6", logo: favicon("redraft.ai"), url: "https://redraft.ai",
+      color: "#14b8a6", logo: favicon("recraft.ai"), url: "https://www.recraft.ai",
       strength: "기존 인물의 얼굴과 구도를 유지하며 스타일만 바꾸는 고정 생성.",
       weakness: "인지도가 낮고 기능이 제한적.",
       pricing: "Freemium", plan: "Free / Pro",
@@ -756,7 +756,7 @@ const tools = [
       pricing: "Freemium", plan: "Free / Pro ($20/월)",
       prompt: "\"이 auth.ts의 로그인 함수를 리팩토링해줘. try-catch로 에러 처리 감싸고 로그 저장.\"" },
     { name: "Windsurf", category: "coding", identity: "AI IDE",
-      color: "#06b6d4", logo: favicon("codeium.com"), url: "https://codeium.com/windsurf",
+      color: "#06b6d4", logo: favicon("windsurf.com"), url: "https://windsurf.com",
       strength: "Codeium 기반 AI IDE. 대규모 코드베이스 이해 능력 강점.",
       weakness: "커뮤니티와 플러그인 생태계가 Cursor보다 작음.",
       pricing: "Freemium", plan: "Free / Pro",
@@ -792,13 +792,13 @@ const tools = [
       pricing: "Freemium", plan: "Free / Pro",
       prompt: "\"Python으로 간단한 REST API 서버를 만들어줘.\"" },
     { name: "Rork", category: "coding", identity: "모바일 앱 빌더",
-      color: "#1a1a2e", logo: favicon("rork.app"), url: "https://rork.app",
+      color: "#1a1a2e", logo: favicon("rork.com"), url: "https://rork.com",
       strength: "텍스트로 모바일 앱 프로토타입을 빠르게 생성.",
       weakness: "복잡한 네이티브 기능 구현 한계.",
       pricing: "Freemium", plan: "Free / Pro",
       prompt: "\"피트니스 트래커 모바일 앱 UI를 만들어줘.\"" },
     { name: "Codev", category: "coding", identity: "코드 리뷰 AI",
-      color: "#22c55e", logo: favicon("codev.com"), url: "https://codev.com",
+      color: "#22c55e", logo: favicon("co.dev"), url: "https://www.co.dev/",
       strength: "풀 리퀘스트 자동 리뷰와 코드 품질 분석.",
       weakness: "코드 생성 능력은 Copilot보다 약함.",
       pricing: "Freemium", plan: "Free / Pro",
@@ -868,7 +868,7 @@ const tools = [
       pricing: "Freemium", plan: "Free / Pro ($15/월)",
       prompt: "\"이 버튼들 간격 일정하게 맞춰줘 (Auto Layout).\"" },
     { name: "Ugic", category: "webui", identity: "AI 디자인 도구",
-      color: "#f43f5e", logo: favicon("ugic.me"), url: "https://ugic.me",
+      color: "#f43f5e", logo: favicon("ugic.ai"), url: "https://ugic.ai",
       strength: "텍스트로 UI 디자인을 빠르게 생성. 피그마 연동 가능.",
       weakness: "세밀한 커스터마이징에는 한계.",
       pricing: "Freemium", plan: "Free / Pro",
@@ -918,7 +918,7 @@ const tools = [
       pricing: "Freemium", plan: "Free 300분/월 / 유료",
       prompt: "\"이 회의 녹음을 화자별로 분리해서 요약해줘.\"" },
     { name: "Tiro", category: "meeting", identity: "회의 전사",
-      color: "#2563eb", logo: favicon("tiro.ai"), url: "https://tiro.ai",
+      color: "#2563eb", logo: favicon("tiro.ooo"), url: "https://tiro.ooo",
       strength: "실시간 음성 인식 및 자동 전사. 한국어 지원.",
       weakness: "요약 기능은 경쟁사 대비 기본적.",
       pricing: "Freemium", plan: "Free / Pro",
@@ -950,7 +950,7 @@ const tools = [
       pricing: "Free", plan: "무료",
       prompt: "\"이 영상에 자동 자막을 넣고 숏폼 크기로 잘라줘.\"" },
     { name: "Vrew", category: "video-edit", identity: "한국어 자막 AI",
-      color: "#3b82f6", logo: favicon("vrew.voyagerx.com"), url: "https://vrew.voyagerx.com",
+      color: "#3b82f6", logo: favicon("vrew.ai"), url: "https://vrew.ai",
       strength: "한국어 음성 인식 및 자막 생성 독보적. '워드 프로세서' 방식 편집.",
       weakness: "전문적인 영상 효과(트랜지션, 색보정)가 제한적.",
       pricing: "Freemium", plan: "Free 120분/월 / Light (9,900원/월)",
@@ -1064,7 +1064,7 @@ const tools = [
 
     // ───── 캐릭터 챗봇 ─────
     { name: "크랙", category: "chatbot", identity: "캐릭터 대화",
-      color: "#f43f5e", logo: favicon("crack.chat"), url: "https://crack.chat",
+      color: "#f43f5e", logo: favicon("crack.wrtn.ai"), url: "https://crack.wrtn.ai/",
       strength: "한국어 특화 캐릭터 챗봇. 다양한 페르소나 제공.",
       weakness: "영어권 캐릭터는 상대적으로 약함.",
       pricing: "Freemium", plan: "Free / Premium",
@@ -1136,13 +1136,13 @@ const tools = [
 
     // ───── 로컬 AI ─────
     { name: "Pinokio", category: "local", identity: "원클릭 AI 설치",
-      color: "#8b5cf6", logo: favicon("pinokio.computer"), url: "https://pinokio.computer",
+      color: "#8b5cf6", logo: favicon("pinokio.co"), url: "https://pinokio.co",
       strength: "복잡한 AI 도구를 원클릭으로 로컬에 설치.",
       weakness: "시스템 사양이 높아야 함.",
       pricing: "Free", plan: "무료 (오픈소스)",
       prompt: "원클릭 설치로 로컬 AI 환경 구축." },
     { name: "ComfyUI", category: "local", identity: "노드 기반 AI",
-      color: "#222222", logo: favicon("comfyui.com"), url: "https://github.com/comfyanonymous/ComfyUI",
+      color: "#222222", logo: favicon("comfy.org"), url: "https://www.comfy.org/",
       strength: "노드 기반으로 정밀한 이미지 생성 파이프라인 구축.",
       weakness: "설정이 복잡하고 학습 곡선 높음.",
       pricing: "Free", plan: "무료 (오픈소스)",
@@ -1182,7 +1182,7 @@ const tools = [
       pricing: "Paid", plan: "구독제 ($10/월~)",
       prompt: "\"(태그형) 금발, 파란눈, 중세 갑옷, 초상화 스타일\"" },
     { name: "Story Tribe", category: "comic", identity: "스토리보드 AI",
-      color: "#f43f5e", logo: favicon("storytribe.io"), url: "https://storytribe.io",
+      color: "#f43f5e", logo: favicon("storytribeapp.com"), url: "https://storytribeapp.com",
       strength: "팀 협업 기반 스토리보드 제작. 장면 자동 생성.",
       weakness: "개인 사용에는 과한 기능.",
       pricing: "Paid", plan: "팀 플랜",
