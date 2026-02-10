@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 AI 서비스 통합 리스트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 48px 20px 32px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f5 100%);
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #5b4def, #8b5cf6, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: #86868b;
+            font-size: 0.95rem;
+        }
+
+        /* Sticky Top Wrap (search + filter) */
+        .sticky-top {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #ffffff;
+            border-bottom: 1px solid #e8e8e8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #ffffff;
+        }
+        .filter-btn {
+            padding: 7px 16px;
+            border: 1px solid #d1d1d6;
+            border-radius: 20px;
+            background: #fff;
+            color: #6e6e73;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover { border-color: #5b4def; color: #5b4def; }
+        .filter-btn.active {
+            background: linear-gradient(135deg, #5b4def, #8b5cf6);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        /* Search */
+        .search-wrap {
+            display: flex;
+            justify-content: center;
+            padding: 12px 20px 8px;
+            background: #ffffff;
+        }
+        .search-wrap input {
+            width: 100%;
+            max-width: 480px;
+            padding: 10px 18px;
+            border: 1px solid #d1d1d6;
+            border-radius: 12px;
+            background: #ffffff;
+            color: #1d1d1f;
+            font-size: 0.9rem;
+            font-family: 'Noto Sans KR', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .search-wrap input:focus { border-color: #5b4def; box-shadow: 0 0 0 3px rgba(91,77,239,0.12); }
+        .search-wrap input::placeholder { color: #aeaeb2; }
+
+        /* Grid */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 20px 60px;
+        }
+        .category-section { margin-bottom: 32px; scroll-margin-top: 160px; }
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            padding: 10px 16px;
+            background: #ffffff;
+            border-radius: 12px;
+            border-left: 4px solid;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1d1d1f;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+            gap: 12px;
+        }
+
+        /* Tool Card */
+        .tool-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 18px 8px 12px;
+            background: #ffffff;
+            border: 1px solid #e8e8ed;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            border-color: #c4b5fd;
+            box-shadow: 0 8px 24px rgba(91,77,239,0.12);
+        }
+
+        /* Pricing Badge */
+        .badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            font-size: 0.58rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 6px;
+            letter-spacing: -0.02em;
+        }
+        .badge-free { background: #dcfce7; color: #15803d; }
+        .badge-freemium { background: #dbeafe; color: #1d4ed8; }
+        .badge-paid { background: #fee2e2; color: #b91c1c; }
+
+        /* Icon */
+        .tool-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            overflow: hidden;
+            background: #f5f5f7;
+        }
+        .tool-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+        .tool-icon .fallback {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #fff;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+        }
+        .tool-name {
+            font-size: 0.73rem;
+            text-align: center;
+            color: #48484a;
+            line-height: 1.3;
+            word-break: keep-all;
+            font-weight: 500;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(6px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: #ffffff;
+            border: 1px solid #e8e8ed;
+            border-radius: 20px;
+            max-width: 560px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+            animation: modalIn 0.25s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #f5f5f7;
+            border: 1px solid #e8e8ed;
+            color: #86868b;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .modal-close:hover { background: #e8e8ed; color: #1d1d1f; }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #f5f5f7;
+            border: 1px solid #e8e8ed;
+        }
+        .modal-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .modal-icon .fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            border-radius: 16px;
+        }
+        .modal-title-area h2 a {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1d1d1f;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .modal-title-area h2 a:hover {
+            color: #5b4def;
+            text-decoration: underline;
+        }
+        .modal-title-area h2 a::after {
+            content: " ↗";
+            font-size: 0.85rem;
+            color: #aeaeb2;
+        }
+        .modal-title-area .modal-identity {
+            font-size: 0.85rem;
+            color: #86868b;
+            margin-top: 2px;
+        }
+        .modal-badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 8px;
+            margin-top: 6px;
+        }
+
+        .modal-section { margin-bottom: 16px; }
+        .modal-section-title {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #5b4def;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+        .modal-section-content {
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: #48484a;
+        }
+        .modal-section-content.strength { color: #15803d; }
+        .modal-section-content.weakness { color: #b91c1c; }
+
+        .prompt-box {
+            background: #f9fafb;
+            border: 1px solid #e8e8ed;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 0.84rem;
+            color: #48484a;
+            line-height: 1.6;
+            font-family: 'Noto Sans KR', monospace;
+            white-space: pre-wrap;
+        }
+        .pricing-box {
+            background: #f0edff;
+            border: 1px solid #ddd6fe;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 0.84rem;
+            color: #48484a;
+            line-height: 1.6;
+        }
+
+        /* Category colors */
+        .cat-writing { border-left-color: #5b4def; }
+        .cat-research { border-left-color: #16a34a; }
+        .cat-video-gen { border-left-color: #dc2626; }
+        .cat-image-edit { border-left-color: #ea580c; }
+        .cat-image-gen { border-left-color: #c026d3; }
+        .cat-coding { border-left-color: #0891b2; }
+        .cat-visual { border-left-color: #ca8a04; }
+        .cat-webui { border-left-color: #7c3aed; }
+        .cat-meeting { border-left-color: #0d9488; }
+        .cat-video-edit { border-left-color: #e11d48; }
+        .cat-comic { border-left-color: #ea580c; }
+        .cat-music { border-left-color: #9333ea; }
+        .cat-auto { border-left-color: #2563eb; }
+        .cat-voice { border-left-color: #16a34a; }
+        .cat-avatar { border-left-color: #db2777; }
+        .cat-translate { border-left-color: #475569; }
+        .cat-research2 { border-left-color: #78350f; }
+        .cat-chatbot { border-left-color: #e11d48; }
+        .cat-campus { border-left-color: #0d9488; }
+        .cat-model { border-left-color: #7c3aed; }
+        .cat-local { border-left-color: #78716c; }
+        .cat-utility { border-left-color: #64748b; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d1d6; border-radius: 3px; }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.6rem; }
+            .tool-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; }
+            .tool-card { padding: 14px 6px 10px; }
+            .tool-icon { width: 44px; height: 44px; }
+            .modal { padding: 24px; margin: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>2026 AI 서비스 통합 리스트</h1>
+    <p>분야별 AI 도구를 한눈에 — 클릭하면 상세 정보 확인</p>
+</div>
+
+<div class="sticky-top">
+    <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="🔍 AI 도구명을 검색하세요..." oninput="filterTools()">
+    </div>
+    <div class="filter-bar" id="filterBar"></div>
+</div>
+
+<div class="container" id="mainContainer"></div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" id="modal">
+        <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('active')">✕</button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<script>
+const categories = [
+    { id: "writing", name: "글쓰기 및 전반적인 작업", icon: "✍️", css: "cat-writing" },
+    { id: "research", name: "리서치 작업", icon: "🔍", css: "cat-research" },
+    { id: "video-gen", name: "동영상 생성", icon: "🎬", css: "cat-video-gen" },
+    { id: "image-edit", name: "이미지 편집", icon: "🛠️", css: "cat-image-edit" },
+    { id: "image-gen", name: "이미지 생성", icon: "🖼️", css: "cat-image-gen" },
+    { id: "coding", name: "바이브 코딩", icon: "💻", css: "cat-coding" },
+    { id: "visual", name: "시각화 / PPT", icon: "📊", css: "cat-visual" },
+    { id: "webui", name: "웹 / UI / UX 디자인", icon: "🌐", css: "cat-webui" },
+    { id: "meeting", name: "회의록 / 기록 작성", icon: "📝", css: "cat-meeting" },
+    { id: "video-edit", name: "동영상 편집", icon: "🎞️", css: "cat-video-edit" },
+    { id: "comic", name: "AI 만화 / 스토리보드", icon: "📖", css: "cat-comic" },
+    { id: "music", name: "음악 생성", icon: "🎵", css: "cat-music" },
+    { id: "avatar", name: "AI 아바타", icon: "🧑‍💼", css: "cat-avatar" },
+    { id: "voice", name: "음성 합성", icon: "🔊", css: "cat-voice" },
+    { id: "auto", name: "자동화 / AI 에이전트", icon: "⚡", css: "cat-auto" },
+    { id: "translate", name: "번역", icon: "🌍", css: "cat-translate" },
+    { id: "research2", name: "연구 및 리서치", icon: "🔬", css: "cat-research2" },
+    { id: "chatbot", name: "캐릭터 챗봇", icon: "💬", css: "cat-chatbot" },
+    { id: "campus", name: "슬기로운 대학생활", icon: "🎓", css: "cat-campus" },
+    { id: "model", name: "AI 모델 / 추론", icon: "🧠", css: "cat-model" },
+    { id: "local", name: "로컬 AI", icon: "🖥️", css: "cat-local" },
+    { id: "utility", name: "유틸리티", icon: "🔧", css: "cat-utility" }
+];
+
+// Favicon helper
+function favicon(domain) {
+    return "https://www.google.com/s2/favicons?domain=" + domain + "&sz=128";
+}
+
+// Local image overrides for logos that fail to load from the internet
+const localLogos = {
+    "Liner": "Liner.webp",
+    "Ugic": "Ugic.jpg",
+    "클로바노트": "ClovaNote.png",
+    "Tiro": "Tiro.png",
+    "Story Tribe": "StoryTribe.png",
+    "ComfyUI": "ComfyUI.avif"
+};
+
+const tools = [
+    // ───── 글쓰기 및 전반적인 작업 ─────
+    { name: "ChatGPT", category: "writing", identity: "범용 LLM 작업 파트너",
+      color: "#10a37f", logo: favicon("chat.openai.com"), url: "https://chat.openai.com",
+      strength: "음성 모드(Voice)와 GPTs 생태계. 코딩, 이미지, 분석을 한 채팅방에서 가장 유연하게 처리.",
+      weakness: "최신 정보 반영 속도가 검색 전용 툴보다 느림. 할루시네이션 존재.",
+      pricing: "Freemium", plan: "Free / Plus ($20/월)",
+      prompt: "\"10년차 에디터 페르소나로, 이 회의록을 CEO 보고용 A4 1장 불렛포인트로 요약해줘.\"" },
+    { name: "Claude", category: "writing", identity: "장문 특화 AI 작가",
+      color: "#d97706", logo: favicon("claude.ai"), url: "https://claude.ai",
+      strength: "가장 자연스러운 한국어 작문. 긴 문맥을 이해하며 문학적/논리적 글쓰기에 최적.",
+      weakness: "웹 검색 기능이 약하고, 사용량 제한이 경쟁사 대비 엄격함.",
+      pricing: "Freemium", plan: "Free / Pro ($20/월)",
+      prompt: "\"이 50p 논문을 읽고 서론-본론-결론 구조로 요약하고, 핵심 주장의 논리적 허점을 찾아줘.\"" },
+    { name: "Gemini", category: "writing", identity: "구글 연동 AI",
+      color: "#4285f4", logo: favicon("gemini.google.com"), url: "https://gemini.google.com",
+      strength: "구글 생태계(Docs, Youtube) 연동. 영상 내용을 보지 않고 요약하거나 드라이브 문서를 참조.",
+      weakness: "답변이 지나치게 윤리적/보수적이라 창작의 자유도가 떨어질 때가 있음.",
+      pricing: "Freemium", plan: "Free / Advanced (29,000원/월)",
+      prompt: "\"@Youtube 이 영상의 내용을 3줄 요약하고, 언급된 제품의 스펙을 표로 정리해줘.\"" },
+    { name: "Grok", category: "writing", identity: "실시간 트렌드 검색",
+      color: "#1d9bf0", logo: favicon("grok.x.ai"), url: "https://grok.x.ai",
+      strength: "X(트위터)의 실시간 데이터를 바로 검색. 최신 밈이나 뉴스 반영 속도가 가장 빠름.",
+      weakness: "X(트위터) 유료 구독이 필요.",
+      pricing: "Paid", plan: "X Premium (월 약 1만원대~)",
+      prompt: "\"재미있는(Fun) 모드로 요즘 유행 설명해줘.\"" },
+    { name: "Perplexity", category: "writing", identity: "출처 기반 검색 AI",
+      color: "#22c55e", logo: favicon("perplexity.ai"), url: "https://perplexity.ai",
+      strength: "실시간 웹 검색과 정확한 출처(Citation). 팩트 체크 용이.",
+      weakness: "창의적 글쓰기나 스토리텔링 능력은 약함.",
+      pricing: "Freemium", plan: "Free / Pro ($20/월)",
+      prompt: "\"2025년 생성형 AI 트렌드 리포트를 검색하고, 시장 규모 수치를 포함해 표로 만들어줘.\"" },
+    { name: "DeepSeek", category: "writing", identity: "오픈소스 LLM",
+      color: "#6366f1", logo: favicon("deepseek.com"), url: "https://chat.deepseek.com",
+      strength: "고성능 오픈소스 모델. 추론 능력이 뛰어나고 무료 사용 가능.",
+      weakness: "생태계가 아직 성장 중. 플러그인/연동 기능 부족.",
+      pricing: "Free", plan: "무료 (오픈소스)",
+      prompt: "\"이 코드의 시간 복잡도를 분석하고 최적화 방안을 제시해줘.\"" },
+    { name: "Le Chat", category: "writing", identity: "Mistral AI 채팅봇",
+      color: "#ff6b35", logo: favicon("chat.mistral.ai"), url: "https://chat.mistral.ai",
+      strength: "유럽 기반 AI. 다국어 지원과 빠른 응답 속도.",
+      weakness: "영어/프랑스어 외 언어에서는 경쟁사 대비 부족.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"이 기사를 분석하고 핵심 논점 3가지를 뽑아줘.\"" },
+    { name: "Copilot", category: "writing", identity: "MS 통합 AI",
+      color: "#0078d4", logo: favicon("copilot.microsoft.com"), url: "https://copilot.microsoft.com",
+      strength: "MS Office(Word, Excel, PPT) 연동. 문서 작업 중 즉시 AI 활용.",
+      weakness: "단독 채팅 능력은 ChatGPT에 미치지 못함.",
+      pricing: "Freemium", plan: "Free / Pro ($20/월)",
+      prompt: "\"이 엑셀 데이터를 분석해서 트렌드를 요약해줘.\"" },
+    { name: "Poe", category: "writing", identity: "멀티 AI 플랫폼",
+      color: "#8b5cf6", logo: favicon("poe.com"), url: "https://poe.com",
+      strength: "ChatGPT, Claude, Gemini 등 여러 AI를 한곳에서 비교 사용.",
+      weakness: "각 모델의 사용량 제한이 개별 서비스보다 타이트함.",
+      pricing: "Freemium", plan: "Free / Subscriber ($20/월)",
+      prompt: "\"Claude와 GPT-4에게 같은 질문을 보내고 답변을 비교해줘.\"" },
+    { name: "Notion AI", category: "writing", identity: "문서 생산성 AI",
+      color: "#000000", logo: favicon("notion.so"), url: "https://www.notion.so/product/ai",
+      strength: "워크스페이스 내장형. 문서 내에서 번역, 요약, 톤 수정 가능.",
+      weakness: "챗봇 자체 지능은 GPT-4 대비 낮음.",
+      pricing: "Paid", plan: "월 $8~10 (애드온)",
+      prompt: "\"이 글의 어조를 '전문적이고 정중하게' 바꾸고, 오타를 수정해줘.\"" },
+
+    // ───── 리서치 작업 ─────
+    { name: "ChatGPT", category: "research", identity: "표준형 AI 비서",
+      color: "#10a37f", logo: favicon("chat.openai.com"), url: "https://chat.openai.com",
+      strength: "가장 밸런스가 좋음. GPTs로 데이터 분석, 코딩 등 확장성 뛰어남.",
+      weakness: "무료 버전은 최신 정보 검색에 제한.",
+      pricing: "Freemium", plan: "Free / Plus ($20/월)",
+      prompt: "\"이 주제에 대한 최신 연구 동향을 조사하고 표로 정리해줘.\"" },
+    { name: "Grok", category: "research", identity: "실시간 트렌드 검색",
+      color: "#1d9bf0", logo: favicon("grok.x.ai"), url: "https://grok.x.ai",
+      strength: "X(트위터) 실시간 데이터 검색. 최신 밈/뉴스 반영 속도 최고.",
+      weakness: "X 유료 구독 필요.",
+      pricing: "Paid", plan: "X Premium (월 약 1만원대~)",
+      prompt: "\"요즘 가장 화제인 AI 뉴스를 X 반응과 함께 정리해줘.\"" },
+    { name: "Perplexity", category: "research", identity: "검색 엔진 대체자",
+      color: "#22c55e", logo: favicon("perplexity.ai"), url: "https://perplexity.ai",
+      strength: "정확한 출처(각주) 제공. 웹 문서를 읽고 팩트 위주로 답변.",
+      weakness: "창의적 글쓰기 능력은 전문 LLM보다 부족.",
+      pricing: "Freemium", plan: "Free / Pro ($20/월)",
+      prompt: "\"2026년 커피 원두 시장 전망 (출처 포함)\"" },
+    { name: "Gemini", category: "research", identity: "Google 생태계 연동 비서",
+      color: "#4285f4", logo: favicon("gemini.google.com"), url: "https://gemini.google.com",
+      strength: "유튜브 영상 요약, 구글 드라이브/문서 연동. 긴 문맥 이해에 강함.",
+      weakness: "일부 기능에서 지나친 안전 필터.",
+      pricing: "Freemium", plan: "Free / Advanced ($20/월)",
+      prompt: "\"이 유튜브 영상 링크 내용을 3줄로 요약해줘.\"" },
+    { name: "Felo", category: "research", identity: "다국어 리서치 에이전트",
+      color: "#6366f1", logo: favicon("felo.ai"), url: "https://felo.ai",
+      strength: "일본어/영어 문서를 한국어로 완벽 번역해 찾아줌. 마인드맵 생성.",
+      weakness: "아직 인지도가 낮고 UI가 낯설 수 있음.",
+      pricing: "Free", plan: "현재 대부분 무료 (베타)",
+      prompt: "\"일본 현지 사이트 반응 위주로 찾아줘.\"" },
+    { name: "Genspark", category: "research", identity: "AI 큐레이션 페이지",
+      color: "#f59e0b", logo: favicon("genspark.ai"), url: "https://www.genspark.ai",
+      strength: "검색 결과를 '스파크페이지'라는 요약 웹페이지로 생성.",
+      weakness: "단순 1문답 검색에는 오히려 무거울 수 있음.",
+      pricing: "Free", plan: "현재 베타 무료",
+      prompt: "\"도쿄 3박 4일 여행 코스 짜고 페이지로 정리해줘.\"" },
+    { name: "Liner", category: "research", identity: "학술/지식 하이라이트",
+      color: "#06b6d4", logo: favicon("getliner.com"), url: "https://getliner.com",
+      strength: "신뢰할 수 있는 출처(논문 등) 필터링. 형광펜 기능으로 수집.",
+      weakness: "창작보다는 '수집 및 정리'에 특화.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"학술 논문 위주로 검색해줘.\"" },
+    { name: "Storm", category: "research", identity: "심층 리포트 생성기",
+      color: "#78350f", logo: favicon("storm.genie.stanford.edu"), url: "https://storm.genie.stanford.edu",
+      strength: "위키피디아 스타일의 전문 보고서 작성.",
+      weakness: "생성 시간이 오래 걸리고 간단한 질문엔 부적합.",
+      pricing: "Free", plan: "현재 연구용 프리뷰 무료",
+      prompt: "탐구하고 싶은 '키워드'를 입력하면 심층 리포트 생성." },
+
+    // ───── 동영상 생성 ─────
+    { name: "Kling", category: "video-gen", identity: "물리 법칙의 대가",
+      color: "#ef4444", logo: favicon("klingai.com"), url: "https://klingai.com",
+      strength: "액체 흐름, 근육 움직임 등 복잡한 물리 구현 및 o1 추론 탑재.",
+      weakness: "실사 영상에서 간헐적 아티팩트 발생.",
+      pricing: "Freemium", plan: "무료 체험 / 유료 크레딧",
+      prompt: "\"물 위에 떨어지는 빗방울이 파문을 만드는 슬로우모션 영상을 생성해줘.\"" },
+    { name: "Sora", category: "video-gen", identity: "시네마틱 표준",
+      color: "#000000", logo: favicon("openai.com"), url: "https://sora.com",
+      strength: "영화급 화질과 롱테이크 영상의 일관성 유지 능력 독보적.",
+      weakness: "아직 접근성이 제한적이고 생성 속도가 느림.",
+      pricing: "Paid", plan: "ChatGPT Plus 포함 ($20/월)",
+      prompt: "\"시네마틱 스타일, 드론 샷. 비 젖은 사이버펑크 도시의 네온사인.\"" },
+    { name: "Veo2", category: "video-gen", identity: "사운드 통합",
+      color: "#4285f4", logo: favicon("deepmind.google"), url: "https://deepmind.google/technologies/veo/",
+      strength: "영상과 배경음악(OST)을 동시에 생성하는 완벽한 멀티모달.",
+      weakness: "구글 생태계에 종속적.",
+      pricing: "Freemium", plan: "Google AI 연동",
+      prompt: "\"자연 풍경과 어울리는 배경음악이 포함된 30초 영상을 만들어줘.\"" },
+    { name: "Runway", category: "video-gen", identity: "모션 캡처 전문",
+      color: "#6d28d9", logo: favicon("runwayml.com"), url: "https://runwayml.com",
+      strength: "'Act One' 기능으로 실제 표정/동작의 실시간 캐릭터 이식.",
+      weakness: "고품질 영상 크레딧 소모가 매우 큼.",
+      pricing: "Freemium", plan: "Free 125크레딧 / Standard ($12/월)",
+      prompt: "\"시네마틱 스타일, 드론 샷. 사이버펑크 도시를 걸어가는 로봇. (Camera: Zoom in)\"" },
+    { name: "Krea", category: "video-gen", identity: "실시간 렌더링",
+      color: "#ec4899", logo: favicon("krea.ai"), url: "https://krea.ai",
+      strength: "스케치를 즉각적인 영상 소스로 변환하는 실시간 워크플로우.",
+      weakness: "긴 영상 생성에는 부적합.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"이 스케치를 기반으로 실시간 비디오 소스를 생성해줘.\"" },
+    { name: "Luma", category: "video-gen", identity: "초고속 생성",
+      color: "#0ea5e9", logo: favicon("lumalabs.ai"), url: "https://lumalabs.ai/dream-machine",
+      strength: "텍스트 입력 후 수 초 내 결과물 도출 및 정교한 키프레임 제어.",
+      weakness: "물리 법칙 위배(Morphing) 현상 발생 가능.",
+      pricing: "Freemium", plan: "일일 무료 생성 / 유료",
+      prompt: "\"F1 차량 주행 장면을 드론 뷰 시점으로 역동적이게 생성해줘.\"" },
+    { name: "Hailuo", category: "video-gen", identity: "액션 연출 전문",
+      color: "#f97316", logo: favicon("hailuoai.video"), url: "https://hailuoai.video",
+      strength: "폭발, 격투, 역동적 카메라 워킹 등 고난도 액션 묘사에 강점.",
+      weakness: "정적인 장면에서는 과한 연출이 될 수 있음.",
+      pricing: "Freemium", plan: "무료 체험 / 유료",
+      prompt: "\"빌딩 사이로 폭발이 일어나는 영화 같은 액션 장면을 만들어줘.\"" },
+    { name: "Pika", category: "video-gen", identity: "물리 효과 특화",
+      color: "#8b5cf6", logo: favicon("pika.art"), url: "https://pika.art",
+      strength: "사물을 으깨거나 늘리는 등의 창의적인 특수 효과(FX)에 특화.",
+      weakness: "실사 영상보다는 3D/일러스트 풍에 강점.",
+      pricing: "Freemium", plan: "Free 30크레딧 / Standard ($10/월)",
+      prompt: "\"이 캐릭터가 눈을 깜빡이며 웃는 모습을 자연스럽게 만들어줘.\"" },
+    { name: "Qwen", category: "video-gen", identity: "글로벌 감성",
+      color: "#7c3aed", logo: favicon("huggingface.co/Qwen"), url: "https://qwenlm.github.io",
+      strength: "아시아권 문화 데이터 학습으로 동양적 배경/인물 묘사 사실적.",
+      weakness: "서양권 콘텐츠에서는 상대적 약점.",
+      pricing: "Free", plan: "무료 (오픈소스)",
+      prompt: "\"동양적 배경의 한복 입은 인물이 벚꽃길을 걷는 영상.\"" },
+    { name: "Vidu", category: "video-gen", identity: "애니메이션 전문",
+      color: "#d946ef", logo: favicon("vidu.com"), url: "https://www.vidu.com",
+      strength: "동양권 애니메이션 화풍 및 캐릭터 디자인 유지 능력 우수.",
+      weakness: "실사 영상 품질은 경쟁사 대비 부족.",
+      pricing: "Freemium", plan: "무료 체험 / 유료",
+      prompt: "\"지브리 스타일의 숲속 오두막에서 소녀가 창밖을 바라보는 장면.\"" },
+    { name: "Freepik", category: "video-gen", identity: "실시간 렌더링",
+      color: "#0284c7", logo: favicon("freepik.com"), url: "https://www.freepik.com",
+      strength: "스케치를 즉각적인 영상 소스로 변환. 상업용 리소스 풍부.",
+      weakness: "전문 영상 제작에는 한계.",
+      pricing: "Freemium", plan: "Free / Premium",
+      prompt: "\"마케팅용 짧은 프로모션 영상 소스를 생성해줘.\"" },
+    { name: "Genspark", category: "video-gen", identity: "정보 시각화",
+      color: "#f59e0b", logo: favicon("genspark.ai"), url: "https://www.genspark.ai",
+      strength: "검색 데이터를 기반으로 한 정보성(Infographic) 영상 자동 구성.",
+      weakness: "창작 영상보다는 정보 전달용.",
+      pricing: "Free", plan: "현재 베타 무료",
+      prompt: "\"이 데이터를 시각적 인포그래픽 영상으로 만들어줘.\"" },
+
+    // ───── 이미지 편집 ─────
+    { name: "Photoshop", category: "image-edit", identity: "업계 표준",
+      color: "#31a8ff", logo: favicon("adobe.com/products/photoshop"), url: "https://www.adobe.com/products/photoshop.html",
+      strength: "'생성형 채우기'와 '확장' 기능이 가장 안정적이며 레이어 기반 편집 최강.",
+      weakness: "높은 구독료와 학습 곡선.",
+      pricing: "Paid", plan: "Adobe CC ($23/월~)",
+      prompt: "\"생성형 채우기로 배경을 눈 덮인 산으로 바꿔줘.\"" },
+    { name: "Magnific", category: "image-edit", identity: "디테일 복원",
+      color: "#a855f7", logo: favicon("magnific.ai"), url: "https://magnific.ai",
+      strength: "단순 확장이 아닌, AI가 모공/질감을 새로 그려 넣는 초고해상도 변환.",
+      weakness: "고해상도 변환 비용이 높음.",
+      pricing: "Paid", plan: "월 $39~",
+      prompt: "\"이 저화질 사진을 4K 초고해상도로 복원해줘. 피부 질감 살려서.\"" },
+    { name: "Firefly", category: "image-edit", identity: "저작권 안전",
+      color: "#ff6b2c", logo: favicon("firefly.adobe.com"), url: "https://firefly.adobe.com",
+      strength: "Adobe 자체 데이터만 학습하여 상업적 이용 시 법적 안전성 1위.",
+      weakness: "창의적 자유도가 타 AI 대비 제한적.",
+      pricing: "Freemium", plan: "Free 25크레딧 / CC 구독 포함",
+      prompt: "\"이 제품 사진의 배경을 깔끔한 스튜디오 배경으로 바꿔줘.\"" },
+    { name: "Krea", category: "image-edit", identity: "인터랙티브 편집",
+      color: "#ec4899", logo: favicon("krea.ai"), url: "https://krea.ai",
+      strength: "마우스 움직임에 따라 실시간으로 이미지가 변하는 직관적 UI.",
+      weakness: "전문적인 세밀 편집에는 한계.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"이 이미지에서 배경만 실시간으로 변경해줘.\"" },
+    { name: "Leonardo", category: "image-edit", identity: "캔버스 편집",
+      color: "#9333ea", logo: favicon("leonardo.ai"), url: "https://leonardo.ai",
+      strength: "이미지의 경계를 무한히 넓히는 아웃페인팅과 부분 수정(Inpainting).",
+      weakness: "UI가 다소 복잡.",
+      pricing: "Freemium", plan: "Free 150토큰 / 유료 ($12/월)",
+      prompt: "\"이 풍경 사진의 왼쪽을 더 넓혀서 파노라마로 만들어줘.\"" },
+    { name: "Grok", category: "image-edit", identity: "실시간 트렌드 편집",
+      color: "#1d9bf0", logo: favicon("grok.x.ai"), url: "https://grok.x.ai",
+      strength: "X(트위터)의 최신 이슈를 즉각 반영한 이미지 합성 및 풍자 편집.",
+      weakness: "정밀한 이미지 편집에는 부적합.",
+      pricing: "Paid", plan: "X Premium 포함",
+      prompt: "\"최근 핫한 밈 스타일로 이 사진을 편집해줘.\"" },
+    { name: "AI Studio", category: "image-edit", identity: "프로토타이핑",
+      color: "#34a853", logo: favicon("aistudio.google.com"), url: "https://aistudio.google.com",
+      strength: "구글 모델을 활용해 앱/웹 디자인 초안을 빠르게 수정 및 테스트.",
+      weakness: "디자인 전문 도구에 비해 기능 제한.",
+      pricing: "Free", plan: "무료 (Google)",
+      prompt: "\"이 앱 UI 목업의 색상을 다크 테마로 바꿔줘.\"" },
+    { name: "Scenario", category: "image-edit", identity: "게임 에셋",
+      color: "#f59e0b", logo: favicon("scenario.com"), url: "https://www.scenario.com",
+      strength: "일관된 화풍을 유지하며 아이템, 장비 등을 수정하는 게임 개발용 툴.",
+      weakness: "게임 외 용도에서는 활용도가 떨어짐.",
+      pricing: "Freemium", plan: "Free / Pro ($29/월)",
+      prompt: "\"이 게임 캐릭터의 갑옷 색상만 골드로 변경해줘.\"" },
+    { name: "Playground", category: "image-edit", identity: "커뮤니티 기반",
+      color: "#6366f1", logo: favicon("playground.com"), url: "https://playground.com",
+      strength: "다양한 필터와 사용자 프리셋을 활용한 쉽고 빠른 혼합 편집.",
+      weakness: "전문적인 결과물에는 한계.",
+      pricing: "Freemium", plan: "Free / Pro ($15/월)",
+      prompt: "\"빈티지 필터를 적용하고 색감을 따뜻하게 조정해줘.\"" },
+    { name: "Microsoft Designer", category: "image-edit", identity: "오피스 연동",
+      color: "#0078d4", logo: favicon("designer.microsoft.com"), url: "https://designer.microsoft.com",
+      strength: "PPT나 문서 데이터를 바탕으로 즉석에서 디자인 리소스로 변환.",
+      weakness: "독립적인 디자인 툴로는 기능 부족.",
+      pricing: "Freemium", plan: "Free / M365 포함",
+      prompt: "\"이 PPT 데이터를 인포그래픽 이미지로 변환해줘.\"" },
+
+    // ───── 이미지 생성 ─────
+    { name: "Midjourney", category: "image-gen", identity: "예술성 1위",
+      color: "#e040fb", logo: favicon("midjourney.com"), url: "https://www.midjourney.com",
+      strength: "독보적인 화풍과 질감 표현으로 전문 작가들이 가장 선호 (v7).",
+      weakness: "Discord 기반으로 UI가 불편.",
+      pricing: "Paid", plan: "Basic ($10/월) / Standard ($30/월)",
+      prompt: "\"유화 질감의 중세 기사가 드래곤과 싸우는 장면, 시네마틱 조명 --ar 16:9\"" },
+    { name: "Flux", category: "image-gen", identity: "실사 끝판왕",
+      color: "#000000", logo: favicon("blackforestlabs.ai"), url: "https://blackforestlabs.ai",
+      strength: "인체(손가락 등)와 피부 표현, 조명 반사가 실제 사진과 구분 불가.",
+      weakness: "예술적 스타일 변형에는 미드저니보다 약함.",
+      pricing: "Freemium", plan: "Free (오픈소스) / Pro API",
+      prompt: "\"30대 여성이 카페에서 커피를 마시는 사진. 자연광, Canon EOS R5\"" },
+    { name: "Ideogram", category: "image-gen", identity: "타이포그래피",
+      color: "#f43f5e", logo: favicon("ideogram.ai"), url: "https://ideogram.ai",
+      strength: "이미지 내 로고, 간판, 티셔츠 글자를 오타 없이 정확히 렌더링.",
+      weakness: "실사 인물 묘사는 경쟁사 대비 약함.",
+      pricing: "Freemium", plan: "Free 25장/일 / Plus ($7/월)",
+      prompt: "\"'HELLO WORLD'가 적힌 네온사인 간판 이미지\"" },
+    { name: "ImageFX", category: "image-gen", identity: "직관적 제어",
+      color: "#4285f4", logo: favicon("aitestkitchen.withgoogle.com"), url: "https://aitestkitchen.withgoogle.com/tools/image-fx",
+      strength: "구글의 최신 모델 사용. 키워드 조합으로 미세 조정이 매우 간편.",
+      weakness: "강한 안전 필터로 일부 주제 생성 제한.",
+      pricing: "Free", plan: "무료 (Google AI Test Kitchen)",
+      prompt: "\"미래 도시의 옥상 정원에서 요가하는 사람 일러스트\"" },
+    { name: "Leonardo", category: "image-gen", identity: "모델 다양성",
+      color: "#9333ea", logo: favicon("leonardo.ai"), url: "https://leonardo.ai",
+      strength: "미드저니 스타일부터 Flux까지 다양한 엔진을 한곳에서 선택 가능.",
+      weakness: "무료 크레딧이 빠르게 소진됨.",
+      pricing: "Freemium", plan: "Free 150토큰/일 / Artisan ($12/월)",
+      prompt: "\"(Phoenix 모델) 일본 신사 앞 벚꽃이 흩날리는 수채화 스타일\"" },
+    { name: "Redraft", category: "image-gen", identity: "캐릭터 고정",
+      color: "#14b8a6", logo: favicon("redraft.ai"), url: "https://redraft.ai",
+      strength: "기존 인물의 얼굴과 구도를 유지하며 스타일만 바꾸는 고정 생성.",
+      weakness: "인지도가 낮고 기능이 제한적.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"이 인물 사진을 유지하면서 수채화 스타일로 변환해줘.\"" },
+    { name: "Freepik", category: "image-gen", identity: "상업용 리소스",
+      color: "#0284c7", logo: favicon("freepik.com"), url: "https://www.freepik.com",
+      strength: "마케팅에 즉시 사용 가능한 아이콘, 일러스트, 벡터 스타일 생성.",
+      weakness: "고유한 예술적 스타일 구현에는 한계.",
+      pricing: "Freemium", plan: "Free / Premium ($12/월)",
+      prompt: "\"이커머스 배너용 플랫 일러스트 스타일 아이콘 세트\"" },
+    { name: "Genspark", category: "image-gen", identity: "맥락 이해",
+      color: "#f59e0b", logo: favicon("genspark.ai"), url: "https://www.genspark.ai",
+      strength: "사용자 질문의 의도를 분석해 가장 적절한 구도의 이미지를 자동 생성.",
+      weakness: "세밀한 이미지 제어는 어려움.",
+      pricing: "Free", plan: "현재 베타 무료",
+      prompt: "\"'재택근무의 장단점' 블로그 글에 어울리는 대표 이미지\"" },
+
+    // ───── 바이브 코딩 ─────
+    { name: "Cursor", category: "coding", identity: "AI IDE",
+      color: "#00bcd4", logo: favicon("cursor.com"), url: "https://www.cursor.com",
+      strength: "VS Code 포크 기반. 'Composer'로 여러 파일 동시 수정, 터미널까지 자연어 제어.",
+      weakness: "유료(Pro)를 써야만 제대로 된 성능 체감.",
+      pricing: "Freemium", plan: "Free / Pro ($20/월)",
+      prompt: "\"이 auth.ts의 로그인 함수를 리팩토링해줘. try-catch로 에러 처리 감싸고 로그 저장.\"" },
+    { name: "Windsurf", category: "coding", identity: "AI IDE",
+      color: "#06b6d4", logo: favicon("codeium.com"), url: "https://codeium.com/windsurf",
+      strength: "Codeium 기반 AI IDE. 대규모 코드베이스 이해 능력 강점.",
+      weakness: "커뮤니티와 플러그인 생태계가 Cursor보다 작음.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"이 프로젝트의 아키텍처를 분석하고 개선점을 알려줘.\"" },
+    { name: "Trae", category: "coding", identity: "AI IDE",
+      color: "#ff6b35", logo: favicon("trae.ai"), url: "https://trae.ai",
+      strength: "ByteDance의 AI IDE. 자연어로 코드 작성 및 수정 가능.",
+      weakness: "아직 초기 단계로 안정성 이슈.",
+      pricing: "Free", plan: "무료",
+      prompt: "\"이 함수에 에러 핸들링을 추가해줘.\"" },
+    { name: "V0", category: "coding", identity: "프론트엔드 생성",
+      color: "#000000", logo: favicon("v0.dev"), url: "https://v0.dev",
+      strength: "Vercel의 AI. 텍스트→React 컴포넌트 즉시 생성. UI 프로토타이핑 특화.",
+      weakness: "백엔드 로직 구현에는 한계.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"다크 테마의 대시보드 레이아웃을 React + Tailwind로 만들어줘.\"" },
+    { name: "Bolt", category: "coding", identity: "풀스택 생성기",
+      color: "#3b82f6", logo: favicon("bolt.new"), url: "https://bolt.new",
+      strength: "프론트엔드+백엔드를 한 번에 생성하고 배포까지 지원.",
+      weakness: "복잡한 비즈니스 로직 구현에는 한계.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"투두 앱을 React + Node.js + SQLite로 만들어줘.\"" },
+    { name: "Lovable", category: "coding", identity: "앱 빌더",
+      color: "#ef4444", logo: favicon("lovable.dev"), url: "https://lovable.dev",
+      strength: "대화형으로 웹앱을 만들고 Supabase 연동까지 자동화.",
+      weakness: "커스터마이징 자유도가 제한적.",
+      pricing: "Freemium", plan: "Free / Starter ($20/월)",
+      prompt: "\"회원가입/로그인이 되는 블로그 플랫폼을 만들어줘.\"" },
+    { name: "Replit", category: "coding", identity: "온라인 IDE",
+      color: "#f26522", logo: favicon("replit.com"), url: "https://replit.com",
+      strength: "웹 기반으로 환경 설정 없이 즉시 코딩. AI 코드 보조 내장.",
+      weakness: "성능 제한과 대형 프로젝트에는 부적합.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"Python으로 간단한 REST API 서버를 만들어줘.\"" },
+    { name: "Rork", category: "coding", identity: "모바일 앱 빌더",
+      color: "#1a1a2e", logo: favicon("rork.app"), url: "https://rork.app",
+      strength: "텍스트로 모바일 앱 프로토타입을 빠르게 생성.",
+      weakness: "복잡한 네이티브 기능 구현 한계.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"피트니스 트래커 모바일 앱 UI를 만들어줘.\"" },
+    { name: "Codev", category: "coding", identity: "코드 리뷰 AI",
+      color: "#22c55e", logo: favicon("codev.com"), url: "https://codev.com",
+      strength: "풀 리퀘스트 자동 리뷰와 코드 품질 분석.",
+      weakness: "코드 생성 능력은 Copilot보다 약함.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"이 PR의 코드를 리뷰하고 개선 사항을 알려줘.\"" },
+    { name: "Reweb", category: "coding", identity: "웹사이트 클론",
+      color: "#8b5cf6", logo: favicon("reweb.so"), url: "https://reweb.so",
+      strength: "기존 웹사이트 URL을 입력하면 유사한 디자인의 코드를 생성.",
+      weakness: "복잡한 동적 기능은 복제하지 못함.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"이 URL의 랜딩 페이지와 비슷한 디자인을 만들어줘.\"" },
+    { name: "GitHub Copilot", category: "coding", identity: "코드 보조",
+      color: "#000000", logo: favicon("github.com/features/copilot"), url: "https://github.com/features/copilot",
+      strength: "가장 방대한 코드 학습량과 IDE 범용성. 주석→코드 자동완성 최고.",
+      weakness: "전체 프로젝트 구조 이해 '에이전트' 능력은 Cursor보다 부족.",
+      pricing: "Paid", plan: "Individual ($10/월) / Business ($19/월)",
+      prompt: "// 함수: 이메일 유효성 검사 후 true/false 반환 (주석 작성 시 자동완성)" },
+
+    // ───── 시각화 / PPT ─────
+    { name: "Claude", category: "visual", identity: "코딩 기반 시각화",
+      color: "#d97706", logo: favicon("claude.ai"), url: "https://claude.ai",
+      strength: "데이터를 주면 인터랙티브 차트 코드를 짜서 바로 보여줌 (Artifacts).",
+      weakness: "예쁜 그림보다는 '기능적인 차트' 위주.",
+      pricing: "Freemium", plan: "Free / Pro ($20/월)",
+      prompt: "\"이 데이터를 원형 차트로 그려줘.\"" },
+    { name: "Gamma", category: "visual", identity: "카드뉴스형 PPT 생성",
+      color: "#f59e0b", logo: favicon("gamma.app"), url: "https://gamma.app",
+      strength: "텍스트 입력 시 디자인된 슬라이드 자동 생성. 웹 기반 공유 쉬움.",
+      weakness: "전통 PPT 레이아웃과 달라 인쇄용으로 어색할 수 있음.",
+      pricing: "Freemium", plan: "Free 400크레딧 / 유료 무제한",
+      prompt: "\"1.문제 2.해결 3.비전 순서로 발표 자료 만들어줘.\"" },
+    { name: "Canva", category: "visual", identity: "디자인 템플릿 허브",
+      color: "#00c4cc", logo: favicon("canva.com"), url: "https://www.canva.com",
+      strength: "압도적인 템플릿 수. Magic Design으로 텍스트에 맞는 디자인 추천.",
+      weakness: "내용의 논리적 구조보다는 비주얼 꾸미기에 치중.",
+      pricing: "Freemium", plan: "Free / Pro ($13/월)",
+      prompt: "\"봄 느낌 나는 따뜻한 핑크톤 템플릿으로 발표자료 만들어줘.\"" },
+    { name: "Napkin", category: "visual", identity: "텍스트 도식화",
+      color: "#7c3aed", logo: favicon("napkin.ai"), url: "https://napkin.ai",
+      strength: "글을 복사해 넣으면 심플한 다이어그램(그림)으로 변환.",
+      weakness: "전체 슬라이드가 아니라 '삽입용 그림' 제작 툴.",
+      pricing: "Paid", plan: "체험판 제공 / 유료",
+      prompt: "요약하고 싶은 문단을 그대로 복사/붙여넣기 입력." },
+    { name: "Felo", category: "visual", identity: "리서치 시각화",
+      color: "#6366f1", logo: favicon("felo.ai"), url: "https://felo.ai",
+      strength: "리서치 결과를 시각적 슬라이드로 자동 구성.",
+      weakness: "디자인 커스터마이징 제한.",
+      pricing: "Free", plan: "현재 무료 (베타)",
+      prompt: "\"이 조사 결과를 비교 슬라이드로 만들어줘.\"" },
+    { name: "AiPPT", category: "visual", identity: "문서 변환 PPT",
+      color: "#3b82f6", logo: favicon("aippt.com"), url: "https://www.aippt.com",
+      strength: "워드(Word)나 PDF를 업로드하면 PPT 포맷으로 변환.",
+      weakness: "Gamma보다 디자인 자유도 낮음.",
+      pricing: "Freemium", plan: "무료 체험 / 건당 결제",
+      prompt: "PDF 파일 업로드 후 자동 PPT 변환." },
+    { name: "Mapify", category: "visual", identity: "AI 마인드맵",
+      color: "#14b8a6", logo: favicon("mapify.so"), url: "https://mapify.so",
+      strength: "긴 PDF나 유튜브 영상을 구조화된 마인드맵으로 변환.",
+      weakness: "PPT 형태가 아님.",
+      pricing: "Freemium", plan: "Free 10크레딧 / 유료 구독",
+      prompt: "유튜브 링크나 파일 업로드가 핵심." },
+
+    // ───── 웹 / UI / UX 디자인 ─────
+    { name: "Figma", category: "webui", identity: "전문가용 표준 툴",
+      color: "#a259ff", logo: favicon("figma.com"), url: "https://www.figma.com",
+      strength: "디자이너 협업 표준. AI 플러그인으로 반복 작업 자동화. 수정 자유도 100%.",
+      weakness: "비전공자가 쓰기엔 진입장벽 높음.",
+      pricing: "Freemium", plan: "Free / Pro ($15/월)",
+      prompt: "\"이 버튼들 간격 일정하게 맞춰줘 (Auto Layout).\"" },
+    { name: "Ugic", category: "webui", identity: "AI 디자인 도구",
+      color: "#f43f5e", logo: favicon("ugic.me"), url: "https://ugic.me",
+      strength: "텍스트로 UI 디자인을 빠르게 생성. 피그마 연동 가능.",
+      weakness: "세밀한 커스터마이징에는 한계.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"모바일 쇼핑 앱의 홈 화면 UI를 만들어줘.\"" },
+    { name: "Creatie", category: "webui", identity: "AI 네이티브 디자인 툴",
+      color: "#06b6d4", logo: favicon("creatie.ai"), url: "https://creatie.ai",
+      strength: "피그마와 비슷하지만 '마법봉' 기능으로 아이콘 생성, 이미지 채우기 AI 내장.",
+      weakness: "아직 피그마만큼 플러그인 생태계가 크지 않음.",
+      pricing: "Free", plan: "현재 초기 단계 무료 (얼리 액세스)",
+      prompt: "\"이 영역에 어울리는 아이콘 세트 만들어줘.\"" },
+    { name: "Wegic", category: "webui", identity: "대화형 웹 빌더",
+      color: "#10b981", logo: favicon("wegic.ai"), url: "https://wegic.ai",
+      strength: "채팅으로 '여기 색깔 바꿔줘' 하면 실시간으로 웹사이트 수정.",
+      weakness: "복잡한 기능(쇼핑몰 결제 등) 구현은 제한적.",
+      pricing: "Freemium", plan: "초기 무료 크레딧 / 이후 과금",
+      prompt: "\"헤더 배경을 검은색으로 바꾸고 로고 키워줘.\"" },
+    { name: "Framer", category: "webui", identity: "디자이너용 웹 빌더",
+      color: "#0055ff", logo: favicon("framer.com"), url: "https://www.framer.com",
+      strength: "디자인 툴처럼 그리면 실제 웹사이트로 배포됨. 피그마와 사용성 유사.",
+      weakness: "완전 초보자보다는 디자인 툴 경험이 있는 사람에게 적합.",
+      pricing: "Freemium", plan: "Free / Pro ($10/월)",
+      prompt: "\"미니멀하고 인터랙션이 많은 스타일로 변환해줘.\"" },
+    { name: "Dora", category: "webui", identity: "3D 인터랙티브 웹",
+      color: "#d946ef", logo: favicon("dora.run"), url: "https://www.dora.run",
+      strength: "화려한 3D 효과와 애니메이션이 들어간 사이트 생성.",
+      weakness: "정적인 사이트에는 과할 수 있음.",
+      pricing: "Freemium", plan: "Free (워터마크) / 유료",
+      prompt: "\"스크롤하면 제품이 회전하며 줌인되는 효과.\"" },
+    { name: "Uizard", category: "webui", identity: "스케치 to 디자인",
+      color: "#6366f1", logo: favicon("uizard.io"), url: "https://uizard.io",
+      strength: "손으로 그린 낙서를 찍어 올리면 앱 디자인으로 변환.",
+      weakness: "복잡한 인터랙션 구현에는 한계.",
+      pricing: "Freemium", plan: "Free 2프로젝트 / 유료 ($12/월)",
+      prompt: "텍스트보다 손그림 인식이 핵심. 사진을 업로드." },
+    { name: "Galileo", category: "webui", identity: "텍스트 to 모바일 UI",
+      color: "#f97316", logo: favicon("usegalileo.ai"), url: "https://www.usegalileo.ai",
+      strength: "텍스트 설명만으로 고퀄리티 모바일 앱 화면 세트를 생성.",
+      weakness: "생성 후 세밀한 레이아웃 수정이 어려움.",
+      pricing: "Paid", plan: "무료 크레딧 소량 / 월 구독 ($19~)",
+      prompt: "\"로그인, 회원가입, 홈 화면 세트로 그려줘.\"" },
+
+    // ───── 회의록 / 기록 작성 ─────
+    { name: "클로바노트", category: "meeting", identity: "한국어 특화 기록",
+      color: "#00c73c", logo: favicon("clovanote.naver.com"), url: "https://clovanote.naver.com",
+      strength: "네이버 AI 기반. 한국어 음성 인식 정확도 최고 수준.",
+      weakness: "영어 등 다국어 지원은 제한적.",
+      pricing: "Freemium", plan: "Free 300분/월 / 유료",
+      prompt: "\"이 회의 녹음을 화자별로 분리해서 요약해줘.\"" },
+    { name: "Tiro", category: "meeting", identity: "회의 전사",
+      color: "#2563eb", logo: favicon("tiro.ai"), url: "https://tiro.ai",
+      strength: "실시간 음성 인식 및 자동 전사. 한국어 지원.",
+      weakness: "요약 기능은 경쟁사 대비 기본적.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"이 회의를 실시간으로 전사해줘.\"" },
+    { name: "Felo", category: "meeting", identity: "다국어 회의 기록",
+      color: "#6366f1", logo: favicon("felo.ai"), url: "https://felo.ai",
+      strength: "실시간 통역 및 다국어 회의록 작성 지원.",
+      weakness: "한국어 단독 사용 시 클로바노트보다 약할 수 있음.",
+      pricing: "Free", plan: "현재 무료 (베타)",
+      prompt: "\"한일 회의를 실시간 통역하면서 기록해줘.\"" },
+    { name: "Notta", category: "meeting", identity: "전사 AI",
+      color: "#4f46e5", logo: favicon("notta.ai"), url: "https://www.notta.ai",
+      strength: "다국어 지원. 학습 곡선이 완만하며 다른 툴과 병행 시 시너지.",
+      weakness: "인지도가 낮음.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"이 글로벌 회의를 다국어로 전사해줘.\"" },
+    { name: "Notion", category: "meeting", identity: "문서 정리 허브",
+      color: "#000000", logo: favicon("notion.so"), url: "https://www.notion.so",
+      strength: "회의록을 체계적으로 정리하고 팀과 공유하기에 최적.",
+      weakness: "음성 인식은 별도 도구 필요.",
+      pricing: "Freemium", plan: "Free / Plus ($10/월)",
+      prompt: "\"이 회의록을 액션 아이템 중심으로 정리해줘.\"" },
+
+    // ───── 동영상 편집 ─────
+    { name: "CapCut", category: "video-edit", identity: "숏폼 편집 전문",
+      color: "#000000", logo: favicon("capcut.com"), url: "https://www.capcut.com",
+      strength: "자막 자동 생성이 강점. 학습 곡선이 완만하고 무료.",
+      weakness: "전문 영상 편집에는 기능 부족.",
+      pricing: "Free", plan: "무료",
+      prompt: "\"이 영상에 자동 자막을 넣고 숏폼 크기로 잘라줘.\"" },
+    { name: "Vrew", category: "video-edit", identity: "한국어 자막 AI",
+      color: "#3b82f6", logo: favicon("vrew.voyagerx.com"), url: "https://vrew.voyagerx.com",
+      strength: "한국어 음성 인식 및 자막 생성 독보적. '워드 프로세서' 방식 편집.",
+      weakness: "전문적인 영상 효과(트랜지션, 색보정)가 제한적.",
+      pricing: "Freemium", plan: "Free 120분/월 / Light (9,900원/월)",
+      prompt: "\"이 대본에 어울리는 무료 이미지와 영상을 자동 매칭해서 쇼츠로 만들어줘.\"" },
+    { name: "Veed", category: "video-edit", identity: "온라인 영상 편집",
+      color: "#9333ea", logo: favicon("veed.io"), url: "https://www.veed.io",
+      strength: "웹 기반으로 설치 없이 빠른 편집. AI 자막, 번역 지원.",
+      weakness: "무료 버전 워터마크. 대용량 영상 처리 느림.",
+      pricing: "Freemium", plan: "Free (워터마크) / Pro ($18/월)",
+      prompt: "\"이 영상에 영어 자막을 자동 생성하고 한국어로 번역해줘.\"" },
+    { name: "Invideo", category: "video-edit", identity: "AI 영상 제작",
+      color: "#0ea5e9", logo: favicon("invideo.io"), url: "https://invideo.io",
+      strength: "텍스트만으로 완성된 영상 자동 제작. 템플릿 풍부.",
+      weakness: "세밀한 편집 컨트롤이 부족.",
+      pricing: "Freemium", plan: "Free / Plus ($25/월)",
+      prompt: "\"이 블로그 글을 3분짜리 유튜브 영상으로 만들어줘.\"" },
+
+    // ───── AI 아바타 ─────
+    { name: "HeyGen", category: "avatar", identity: "AI 아바타 영상",
+      color: "#7c3aed", logo: favicon("heygen.com"), url: "https://www.heygen.com",
+      strength: "압도적인 립싱크 및 아바타 모션 품질.",
+      weakness: "고화질 렌더링 시 크레딧 소모가 큼.",
+      pricing: "Paid", plan: "크레딧 기반 (고가형)",
+      prompt: "\"아나운서가 미소와 손동작을 섞어 발표하는 영상을 만들어줘.\"" },
+    { name: "Synthesia", category: "avatar", identity: "기업 교육용 아바타",
+      color: "#4f46e5", logo: favicon("synthesia.io"), url: "https://www.synthesia.io",
+      strength: "기업 교육용 템플릿 및 다국어 지원 풍부.",
+      weakness: "창의적 연출보다 다소 정형화된 느낌.",
+      pricing: "Paid", plan: "월 구독형 (개인/기업)",
+      prompt: "\"온보딩 영상이야. 1인칭 시점의 가이드 대사를 아바타에 입혀줘.\"" },
+
+    // ───── 음성 합성 ─────
+    { name: "ElevenLabs", category: "voice", identity: "음성 합성 정점",
+      color: "#000000", logo: favicon("elevenlabs.io"), url: "https://elevenlabs.io",
+      strength: "인간적 디테일(숨소리 등) 표현 정점.",
+      weakness: "한국어 발음 시 미세한 영어 억양 잔존.",
+      pricing: "Freemium", plan: "글자 수(Character) 기반 과금",
+      prompt: "\"나레이션 톤으로 문장 사이 호흡(Pause)을 길게 두어 긴장감 조성해줘.\"" },
+
+    // ───── 자동화 / AI 에이전트 ─────
+    { name: "Make", category: "auto", identity: "시각적 자동화",
+      color: "#6d28d9", logo: favicon("make.com"), url: "https://www.make.com",
+      strength: "복잡한 분기(Logic)를 시각적으로 설계 가능.",
+      weakness: "초보자에게는 다소 높은 진입 장벽.",
+      pricing: "Freemium", plan: "Free / Core ($9/월)",
+      prompt: "\"메일 수신 시 첨부파일 확인 후 요약본을 Notion에 저장해줘.\"" },
+    { name: "Dify", category: "auto", identity: "에이전트 빌더",
+      color: "#0ea5e9", logo: favicon("dify.ai"), url: "https://dify.ai",
+      strength: "RAG 기반 챗봇을 시각적으로 구축. 오픈소스 셀프호스팅 가능.",
+      weakness: "초기 설정이 복잡.",
+      pricing: "Freemium", plan: "Self-hosted 무료 / Cloud 유료",
+      prompt: "\"회사 내부 문서를 학습한 Q&A 챗봇을 만들어줘.\"" },
+    { name: "n8n", category: "auto", identity: "노드 기반 자동화",
+      color: "#ea4b71", logo: favicon("n8n.io"), url: "https://n8n.io",
+      strength: "셀프 호스팅 무료. Javascript를 섞어 정교한 봇 제작.",
+      weakness: "비개발자에게 진입 장벽 높음.",
+      pricing: "Freemium", plan: "Self-hosted 무료 / Cloud ($20/월)",
+      prompt: "\"이전 노드에서 받은 JSON에서 'email' 필드만 추출해서 구글 시트로 넘겨줘.\"" },
+    { name: "Zapier", category: "auto", identity: "연동 자동화",
+      color: "#ff4a00", logo: favicon("zapier.com"), url: "https://zapier.com",
+      strength: "가장 많은 연동 앱(6,000+). 코딩 없이 'If This Then That' 논리.",
+      weakness: "데이터량 증가 시 비용이 기하급수적 증가.",
+      pricing: "Freemium", plan: "Free 100태스크/월 / Starter ($19.99/월)",
+      prompt: "\"지메일로 '송장' 포함 메일이 오면 첨부파일을 드라이브에 저장하고 슬랙으로 알림.\"" },
+    { name: "Manus", category: "auto", identity: "AI 에이전트",
+      color: "#1a1a2e", logo: favicon("manus.im"), url: "https://manus.im",
+      strength: "자율적으로 웹 브라우징, 코딩, 파일 관리를 수행하는 범용 에이전트.",
+      weakness: "아직 초대제/대기열 방식으로 접근 제한.",
+      pricing: "Freemium", plan: "초대제 / 유료 크레딧",
+      prompt: "\"이 주제에 대해 조사하고 보고서를 PDF로 만들어줘.\"" },
+    { name: "Genspark", category: "auto", identity: "AI 에이전트",
+      color: "#f59e0b", logo: favicon("genspark.ai"), url: "https://www.genspark.ai",
+      strength: "검색 기반 에이전트. 복잡한 리서치 작업을 자동 수행.",
+      weakness: "실행 가능한 액션이 제한적.",
+      pricing: "Free", plan: "현재 베타 무료",
+      prompt: "\"이 경쟁사 3곳을 분석해서 비교 리포트를 만들어줘.\"" },
+
+    // ───── 번역 ─────
+    { name: "DeepL", category: "translate", identity: "전문 번역기",
+      color: "#0f2b46", logo: favicon("deepl.com"), url: "https://www.deepl.com",
+      strength: "문맥 보존 및 비즈니스 뉘앙스 최적화. 번역 품질 최고.",
+      weakness: "지원 언어 수가 경쟁사 대비 적음.",
+      pricing: "Freemium", plan: "Free 제한적 / Pro 유료",
+      prompt: "\"전문 번역가로서 한국 IT 타겟에 맞춰 구어체로 번역해줘.\"" },
+    { name: "Genspark", category: "translate", identity: "다국어 요약 번역",
+      color: "#f59e0b", logo: favicon("genspark.ai"), url: "https://www.genspark.ai",
+      strength: "다중 모델 기반 커스텀 요약 페이지 생성. 번역+요약 동시.",
+      weakness: "정보 과부하로 핵심 파악 지연 가능.",
+      pricing: "Freemium", plan: "Free / 헤비유저 구독제",
+      prompt: "\"최신 트렌드를 비교 표와 타임라인이 포함된 리포트로 요약해줘.\"" },
+
+    // ───── 연구 및 리서치 ─────
+    { name: "Consensus", category: "research2", identity: "학술 검색 AI",
+      color: "#4f46e5", logo: favicon("consensus.app"), url: "https://consensus.app",
+      strength: "논문 인용(Citation) 기반의 높은 신뢰도.",
+      weakness: "최신 시사나 트렌드 데이터는 부족.",
+      pricing: "Freemium", plan: "AI 검색 무료 / 요약 유료",
+      prompt: "\"의학 주제에 대해 동료 검토 논문만 요약해서 근거 제시해줘.\"" },
+    { name: "NotebookLM", category: "research2", identity: "소스 기반 AI",
+      color: "#34a853", logo: favicon("notebooklm.google"), url: "https://notebooklm.google",
+      strength: "업로드한 소스 내에서만 답변하여 정확도 높음. 팟캐스트 생성.",
+      weakness: "구글 생태계 외 외부 링크 연동 제한.",
+      pricing: "Free", plan: "무료 (Google)",
+      prompt: "\"강의록 기반으로 예상 질문 10개를 답안과 함께 추출해줘.\"" },
+    { name: "AlphaXiv", category: "research2", identity: "논문 분석 AI",
+      color: "#dc2626", logo: favicon("alphaxiv.org"), url: "https://alphaxiv.org",
+      strength: "arXiv 논문을 자동 분석하고 핵심 내용 요약.",
+      weakness: "arXiv 외 논문 소스 지원 제한.",
+      pricing: "Free", plan: "무료",
+      prompt: "\"이 논문의 핵심 기여와 한계점을 분석해줘.\"" },
+
+    // ───── 캐릭터 챗봇 ─────
+    { name: "크랙", category: "chatbot", identity: "캐릭터 대화",
+      color: "#f43f5e", logo: favicon("crack.chat"), url: "https://crack.chat",
+      strength: "한국어 특화 캐릭터 챗봇. 다양한 페르소나 제공.",
+      weakness: "영어권 캐릭터는 상대적으로 약함.",
+      pricing: "Freemium", plan: "Free / Premium",
+      prompt: "\"셜록 홈즈로서 대화 중 상대의 모순을 논리적으로 파고들어줘.\"" },
+    { name: "캐릭터.AI", category: "chatbot", identity: "글로벌 캐릭터 챗봇",
+      color: "#6366f1", logo: favicon("character.ai"), url: "https://character.ai",
+      strength: "독보적인 서사 유지 및 글로벌 팬덤 커뮤니티.",
+      weakness: "강한 검열로 표현의 한계.",
+      pricing: "Freemium", plan: "Free / Plus",
+      prompt: "\"중세 기사 캐릭터로 대화하면서 퀘스트를 안내해줘.\"" },
+
+    // ───── 슬기로운 대학생활 ─────
+    { name: "뤼튼", category: "campus", identity: "한국어 AI 플랫폼",
+      color: "#000000", logo: favicon("wrtn.ai"), url: "https://wrtn.ai",
+      strength: "한국어에 특화된 AI. 대학 과제, 보고서 작성에 최적화.",
+      weakness: "영어 콘텐츠에서는 글로벌 AI보다 약함.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"이 주제로 대학교 레포트 개요를 잡아줘.\"" },
+    { name: "Lilys AI", category: "campus", identity: "학습 도우미",
+      color: "#10b981", logo: favicon("lilys.ai"), url: "https://lilys.ai",
+      strength: "유튜브 강의 요약, 논문 분석 등 학습에 특화.",
+      weakness: "범용 AI 대비 기능이 제한적.",
+      pricing: "Freemium", plan: "Free / Premium",
+      prompt: "\"이 유튜브 강의 영상을 챕터별로 요약해줘.\"" },
+
+    // ───── AI 모델 / 추론 ─────
+    { name: "허깅페이스", category: "model", identity: "AI 모델 허브",
+      color: "#ffd21e", logo: favicon("huggingface.co"), url: "https://huggingface.co",
+      strength: "수십만 개 AI 모델을 호스팅. 오픈소스 생태계의 중심.",
+      weakness: "비개발자에게는 접근 어려움.",
+      pricing: "Free", plan: "무료 (오픈소스)",
+      prompt: "모델 검색 및 API 호출로 활용." },
+    { name: "Replicate", category: "model", identity: "AI 모델 실행",
+      color: "#3b82f6", logo: favicon("replicate.com"), url: "https://replicate.com",
+      strength: "클라우드에서 오픈소스 AI 모델을 API로 간편 실행.",
+      weakness: "사용량 기반 과금으로 비용 발생.",
+      pricing: "Freemium", plan: "종량제",
+      prompt: "\"이 이미지를 Stable Diffusion으로 변환해줘.\"" },
+    { name: "Fal AI", category: "model", identity: "AI 인퍼런스",
+      color: "#8b5cf6", logo: favicon("fal.ai"), url: "https://fal.ai",
+      strength: "초고속 AI 모델 실행. 이미지/영상 생성 모델 특화.",
+      weakness: "범용 텍스트 모델 지원은 제한적.",
+      pricing: "Freemium", plan: "종량제",
+      prompt: "\"Flux 모델로 고화질 이미지를 빠르게 생성해줘.\"" },
+    { name: "Tost AI", category: "model", identity: "GPU 클라우드",
+      color: "#22c55e", logo: favicon("tost.ai"), url: "https://tost.ai",
+      strength: "저렴한 GPU 클라우드로 AI 모델 학습 및 실행.",
+      weakness: "셋업이 복잡할 수 있음.",
+      pricing: "Paid", plan: "종량제",
+      prompt: "GPU 클라우드 환경에서 모델 학습/실행." },
+    { name: "Groq", category: "model", identity: "초고속 추론",
+      color: "#f97316", logo: favicon("groq.com"), url: "https://groq.com",
+      strength: "LPU 기반으로 세계 최고 속도의 AI 추론 제공.",
+      weakness: "지원 모델이 제한적.",
+      pricing: "Freemium", plan: "Free / 종량제",
+      prompt: "\"Llama 모델로 이 텍스트를 초고속 분석해줘.\"" },
+    { name: "Cerebras", category: "model", identity: "초고속 추론",
+      color: "#0ea5e9", logo: favicon("cerebras.ai"), url: "https://cerebras.ai",
+      strength: "웨이퍼 스케일 칩 기반 초고속 추론.",
+      weakness: "접근성이 제한적.",
+      pricing: "Freemium", plan: "Free / Enterprise",
+      prompt: "\"대규모 텍스트를 초고속으로 처리해줘.\"" },
+    { name: "Together AI", category: "model", identity: "AI 모델 플랫폼",
+      color: "#6366f1", logo: favicon("together.ai"), url: "https://www.together.ai",
+      strength: "다양한 오픈소스 모델을 하나의 API로 제공.",
+      weakness: "자체 모델이 없음.",
+      pricing: "Freemium", plan: "종량제",
+      prompt: "\"여러 모델을 비교 테스트해줘.\"" },
+
+    // ───── 로컬 AI ─────
+    { name: "Pinokio", category: "local", identity: "원클릭 AI 설치",
+      color: "#8b5cf6", logo: favicon("pinokio.computer"), url: "https://pinokio.computer",
+      strength: "복잡한 AI 도구를 원클릭으로 로컬에 설치.",
+      weakness: "시스템 사양이 높아야 함.",
+      pricing: "Free", plan: "무료 (오픈소스)",
+      prompt: "원클릭 설치로 로컬 AI 환경 구축." },
+    { name: "ComfyUI", category: "local", identity: "노드 기반 AI",
+      color: "#222222", logo: favicon("comfyui.com"), url: "https://github.com/comfyanonymous/ComfyUI",
+      strength: "노드 기반으로 정밀한 이미지 생성 파이프라인 구축.",
+      weakness: "설정이 복잡하고 학습 곡선 높음.",
+      pricing: "Free", plan: "무료 (오픈소스)",
+      prompt: "노드 연결로 커스텀 이미지 생성 파이프라인 구축." },
+    { name: "Ollama", category: "local", identity: "로컬 LLM 실행",
+      color: "#333333", logo: favicon("ollama.com"), url: "https://ollama.com",
+      strength: "간결한 모델 배포 및 로컬 보안성 우수.",
+      weakness: "CLI 환경(터미널) 숙련도 필요.",
+      pricing: "Free", plan: "무료 (오픈소스)",
+      prompt: "\"너는 로컬 코딩 비서야. 설명 없이 코드만 출력해.\"" },
+    { name: "LM Studio", category: "local", identity: "GUI 기반 로컬 AI",
+      color: "#1e40af", logo: favicon("lmstudio.ai"), url: "https://lmstudio.ai",
+      strength: "모델 검색 및 하드웨어 설정 GUI 제공. 초보자 친화적.",
+      weakness: "시스템 자원(VRAM) 점유율이 매우 높음.",
+      pricing: "Free", plan: "무료 (오픈소스)",
+      prompt: "\"내 GPU 성능에 맞춰 컨텍스트 길이를 최대치로 설정해줘.\"" },
+
+    // ───── 유틸리티 ─────
+    { name: "Firecrawl", category: "utility", identity: "웹 데이터 수집",
+      color: "#f97316", logo: favicon("firecrawl.dev"), url: "https://www.firecrawl.dev",
+      strength: "웹사이트를 LLM용 마크다운으로 즉시 변환.",
+      weakness: "스캔 비용 발생 및 대규모 작업 시 부담.",
+      pricing: "Freemium", plan: "API 호출 횟수 기반 과금",
+      prompt: "\"URL 내에서 핵심 데이터만 추출해서 JSON 구조로 정리해줘.\"" },
+
+    // ───── AI 만화 / 스토리보드 ─────
+    { name: "Anifusion", category: "comic", identity: "AI 망가",
+      color: "#e040fb", logo: favicon("anifusion.ai"), url: "https://anifusion.ai",
+      strength: "애니메이션/망가 스타일에 특화. 캐릭터 일관성 유지.",
+      weakness: "편집 기능이 약함.",
+      pricing: "Paid", plan: "크레딧 기반",
+      prompt: "\"소년만화 스타일로 주인공이 검을 휘두르는 장면을 그려줘.\"" },
+    { name: "Novel AI", category: "comic", identity: "캐릭터 생성",
+      color: "#6366f1", logo: favicon("novelai.net"), url: "https://novelai.net",
+      strength: "캐릭터 일관성 유지에 강함. 다양한 스타일 태그 지원.",
+      weakness: "실사 이미지 생성에는 약함.",
+      pricing: "Paid", plan: "구독제 ($10/월~)",
+      prompt: "\"(태그형) 금발, 파란눈, 중세 갑옷, 초상화 스타일\"" },
+    { name: "Story Tribe", category: "comic", identity: "스토리보드 AI",
+      color: "#f43f5e", logo: favicon("storytribe.io"), url: "https://storytribe.io",
+      strength: "팀 협업 기반 스토리보드 제작. 장면 자동 생성.",
+      weakness: "개인 사용에는 과한 기능.",
+      pricing: "Paid", plan: "팀 플랜",
+      prompt: "\"이 시나리오를 6컷 스토리보드로 만들어줘.\"" },
+
+    // ───── 음악 생성 ─────
+    { name: "Suno", category: "music", identity: "AI 노래 생성",
+      color: "#000000", logo: favicon("suno.com"), url: "https://suno.com",
+      strength: "보컬 포함 완성된 노래를 텍스트로 생성. 다양한 장르 지원.",
+      weakness: "세밀한 편집 한계. 상업적 사용 제한.",
+      pricing: "Freemium", plan: "Free 10곡/일 / Pro ($10/월)",
+      prompt: "\"신나는 K-pop 스타일의 여름 바이브 노래를 만들어줘.\"" },
+    { name: "Udio", category: "music", identity: "AI 노래 생성",
+      color: "#6366f1", logo: favicon("udio.com"), url: "https://www.udio.com",
+      strength: "편집 가능한 음악 생성. 구조(Intro-Verse-Chorus) 지정 가능.",
+      weakness: "UI가 다소 복잡.",
+      pricing: "Freemium", plan: "Free / Pro",
+      prompt: "\"Intro 8마디 → Verse → Chorus 구조로 인디 록 곡을 만들어줘.\"" },
+    { name: "MusicFX", category: "music", identity: "구글 음악 AI",
+      color: "#4285f4", logo: favicon("aitestkitchen.withgoogle.com"), url: "https://aitestkitchen.withgoogle.com/tools/music-fx",
+      strength: "구글의 AI로 다양한 분위기의 배경 음악 생성. 무료.",
+      weakness: "보컬 생성 불가.",
+      pricing: "Free", plan: "무료 (Google AI Test Kitchen)",
+      prompt: "\"카페에서 틀기 좋은 재즈 로파이 배경음악을 만들어줘.\"" }
+];
+
+// ============================================================
+// Rendering
+// ============================================================
+function getPricingBadge(pricing) {
+    if (!pricing) return "";
+    const p = pricing.toLowerCase();
+    if (p.includes("free") && !p.includes("freemium") && !p.includes("paid"))
+        return '<span class="badge badge-free">무료</span>';
+    if (p.includes("freemium"))
+        return '<span class="badge badge-freemium">부분유료</span>';
+    return '<span class="badge badge-paid">유료</span>';
+}
+
+function getInitials(name) {
+    return name.replace(/[^a-zA-Z가-힣]/g, "").substring(0, 2).toUpperCase() || name.substring(0, 2);
+}
+
+function iconHTML(tool, size) {
+    const s = size || 52;
+    const local = localLogos[tool.name];
+    if (local) {
+        return `<img src="${local}" alt="${tool.name}" style="width:${s}px;height:${s}px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fallback" style="display:none;background:${tool.color};width:${s}px;height:${s}px;">${getInitials(tool.name)}</div>`;
+    }
+    if (tool.logo) {
+        const fallbackLocal = local ? `this.src='${local}'` : `this.style.display='none';this.nextElementSibling.style.display='flex'`;
+        return `<img src="${tool.logo}" alt="${tool.name}" style="width:${s}px;height:${s}px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fallback" style="display:none;background:${tool.color};width:${s}px;height:${s}px;">${getInitials(tool.name)}</div>`;
+    }
+    return `<div class="fallback" style="background:${tool.color};width:${s}px;height:${s}px;">${getInitials(tool.name)}</div>`;
+}
+
+function renderFilterBar() {
+    const bar = document.getElementById("filterBar");
+    let html = '<button class="filter-btn active" data-cat="all" onclick="scrollToCategory(\'all\')">전체 ↑</button>';
+    categories.forEach(c => {
+        html += `<button class="filter-btn" data-cat="${c.id}" onclick="scrollToCategory('${c.id}')">${c.icon} ${c.name}</button>`;
+    });
+    bar.innerHTML = html;
+}
+
+function scrollToCategory(catId) {
+    // Update active state
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.remove("active");
+        if (btn.dataset.cat === catId) btn.classList.add("active");
+    });
+
+    if (catId === "all") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+    }
+
+    const el = document.getElementById("cat-" + catId);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// Highlight active category on scroll
+function updateActiveOnScroll() {
+    const sections = document.querySelectorAll(".category-section");
+    let current = "all";
+    sections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top <= 200) current = sec.id.replace("cat-", "");
+    });
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.remove("active");
+        if (btn.dataset.cat === current) btn.classList.add("active");
+    });
+}
+window.addEventListener("scroll", updateActiveOnScroll, { passive: true });
+
+function filterTools() { renderGrid(); }
+
+function renderGrid() {
+    const container = document.getElementById("mainContainer");
+    const search = document.getElementById("searchInput").value.toLowerCase();
+    let html = "";
+
+    categories.forEach(cat => {
+        const catTools = tools.filter(t => {
+            if (t.category !== cat.id) return false;
+            if (search && !t.name.toLowerCase().includes(search) && !t.identity.toLowerCase().includes(search)) return false;
+            return true;
+        });
+        if (catTools.length === 0) return;
+
+        html += `<div class="category-section" id="cat-${cat.id}">`;
+        html += `<div class="category-title ${cat.css}">${cat.icon} ${cat.name} <span style="font-size:0.8rem;color:#aeaeb2;font-weight:400;margin-left:auto;">${catTools.length}개</span></div>`;
+        html += `<div class="tool-grid">`;
+        catTools.forEach((tool, idx) => {
+            html += `
+                <div class="tool-card" onclick="openModal('${cat.id}', ${idx})">
+                    ${getPricingBadge(tool.pricing)}
+                    <div class="tool-icon">${iconHTML(tool)}</div>
+                    <div class="tool-name">${tool.name}</div>
+                </div>`;
+        });
+        html += `</div></div>`;
+    });
+
+    if (!html) html = '<div style="text-align:center;padding:60px;color:#aeaeb2;">검색 결과가 없습니다.</div>';
+    container.innerHTML = html;
+}
+
+function openModal(catId, idx) {
+    const catTools = tools.filter(t => t.category === catId);
+    const tool = catTools[idx];
+    if (!tool) return;
+    const cat = categories.find(c => c.id === catId);
+
+    let badgeClass = "badge-freemium", badgeText = "부분유료";
+    const p = (tool.pricing || "").toLowerCase();
+    if (p.includes("free") && !p.includes("freemium") && !p.includes("paid")) { badgeClass = "badge-free"; badgeText = "무료"; }
+    else if (!p.includes("freemium") && (p.includes("paid") || p === "유료")) { badgeClass = "badge-paid"; badgeText = "유료"; }
+
+    let html = `
+        <div class="modal-header">
+            <div class="modal-icon">${iconHTML(tool, 60)}</div>
+            <div class="modal-title-area">
+                <h2><a href="${tool.url}" target="_blank" rel="noopener noreferrer">${tool.name}</a></h2>
+                <div class="modal-identity">${cat.icon} ${cat.name} · ${tool.identity}</div>
+                <span class="modal-badge ${badgeClass}">${badgeText}</span>
+            </div>
+        </div>
+        <div class="modal-section">
+            <div class="modal-section-title">✅ 강점</div>
+            <div class="modal-section-content strength">${tool.strength}</div>
+        </div>
+        <div class="modal-section">
+            <div class="modal-section-title">⚠️ 약점</div>
+            <div class="modal-section-content weakness">${tool.weakness}</div>
+        </div>`;
+
+    if (tool.plan) html += `
+        <div class="modal-section">
+            <div class="modal-section-title">💰 요금제</div>
+            <div class="pricing-box">${tool.plan}</div>
+        </div>`;
+
+    if (tool.prompt) html += `
+        <div class="modal-section">
+            <div class="modal-section-title">💡 프롬프트 예시</div>
+            <div class="prompt-box">${tool.prompt}</div>
+        </div>`;
+
+    document.getElementById("modalContent").innerHTML = html;
+    document.getElementById("modalOverlay").classList.add("active");
+}
+
+function closeModal(e) {
+    if (e.target === document.getElementById("modalOverlay"))
+        document.getElementById("modalOverlay").classList.remove("active");
+}
+
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape") document.getElementById("modalOverlay").classList.remove("active");
+});
+
+renderFilterBar();
+renderGrid();
+</script>
+</body>
+</html>
