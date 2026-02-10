@@ -1297,9 +1297,9 @@ function renderGrid() {
         html += `<div class="category-section" id="cat-${cat.id}">`;
         html += `<div class="category-title ${cat.css}">${cat.icon} ${cat.name} <span style="font-size:0.8rem;color:#aeaeb2;font-weight:400;margin-left:auto;">${catTools.length}개</span></div>`;
         html += `<div class="tool-grid">`;
-        catTools.forEach((tool, idx) => {
+        catTools.forEach((tool) => {
             html += `
-                <div class="tool-card" onclick="openModal('${cat.id}', ${idx})">
+                <div class="tool-card" onclick="openModal(${tools.indexOf(tool)})">
                     ${getPricingBadge(tool.pricing)}
                     <div class="tool-icon">${iconHTML(tool)}</div>
                     <div class="tool-name">${tool.name}</div>
@@ -1312,11 +1312,10 @@ function renderGrid() {
     container.innerHTML = html;
 }
 
-function openModal(catId, idx) {
-    const catTools = tools.filter(t => t.category === catId);
-    const tool = catTools[idx];
+function openModal(idx) {
+    const tool = tools[idx];
     if (!tool) return;
-    const cat = categories.find(c => c.id === catId);
+    const cat = categories.find(c => c.id === tool.category);
 
     let badgeClass = "badge-freemium", badgeText = "부분유료";
     const p = (tool.pricing || "").toLowerCase();
