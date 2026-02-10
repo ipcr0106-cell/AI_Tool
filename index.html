@@ -1245,6 +1245,117 @@ const tools = [
 ];
 
 // ============================================================
+// Korean search aliases (한국어 검색용 별칭)
+// ============================================================
+const koAliases = {
+    "ChatGPT": "챗지피티 챗GPT 오픈에이아이 오픈AI",
+    "Claude": "클로드 앤트로픽",
+    "Gemini": "제미나이 구글 제미니",
+    "Grok": "그록 엑스AI",
+    "Perplexity": "퍼플렉시티",
+    "DeepSeek": "딥시크",
+    "Le Chat": "르챗 미스트랄",
+    "Copilot": "코파일럿 마이크로소프트",
+    "Poe": "포이 포에",
+    "Notion AI": "노션AI 노션에이아이",
+    "Qwen": "큐원 큐웬 알리바바 통의천문",
+    "Kling": "클링",
+    "Sora": "소라",
+    "Veo3": "비오 구글비오",
+    "Runway": "런웨이",
+    "Krea": "크레아",
+    "Luma": "루마 드림머신",
+    "Hailuo": "하이루오 해일루오",
+    "Pika": "피카",
+    "Vidu": "비두",
+    "Freepik": "프리픽",
+    "Genspark": "젠스파크",
+    "Higgsfield": "힉스필드",
+    "Photoshop": "포토샵 어도비",
+    "Magnific": "매그니픽",
+    "Firefly": "파이어플라이 어도비",
+    "Leonardo": "레오나르도",
+    "AI Studio": "에이아이스튜디오 구글",
+    "Scenario": "시나리오",
+    "Playground": "플레이그라운드",
+    "Microsoft Designer": "마이크로소프트 디자이너",
+    "Midjourney": "미드저니",
+    "Flux": "플럭스",
+    "Ideogram": "아이디오그램",
+    "ImageFX": "이미지에프엑스 구글",
+    "Recraft": "리크래프트",
+    "Cursor": "커서",
+    "Windsurf": "윈드서프 코디움",
+    "Trae": "트레이 바이트댄스",
+    "V0": "브이제로 버셀",
+    "Bolt": "볼트",
+    "Lovable": "러버블",
+    "Replit": "레플릿",
+    "Rork": "로크",
+    "Codev": "코데브",
+    "Reweb": "리웹",
+    "GitHub Copilot": "깃허브 코파일럿 깃헙",
+    "Gamma": "감마",
+    "Canva": "캔바",
+    "Napkin": "냅킨",
+    "Felo": "펠로",
+    "AiPPT": "에이아이피피티",
+    "Mapify": "맵피파이",
+    "Figma": "피그마",
+    "Ugic": "유직",
+    "Creatie": "크리에이티",
+    "Wegic": "위직",
+    "Framer": "프레이머",
+    "Dora": "도라",
+    "Uizard": "유아이자드",
+    "Galileo": "갈릴레오",
+    "Liner": "라이너",
+    "Storm": "스톰",
+    "클로바노트": "네이버 클로바 ClovaNote",
+    "Tiro": "티로",
+    "Notta": "노타",
+    "Notion": "노션",
+    "CapCut": "캡컷",
+    "Vrew": "브루",
+    "Veed": "비드",
+    "Invideo": "인비디오",
+    "HeyGen": "헤이젠",
+    "Synthesia": "신세시아",
+    "ElevenLabs": "일레븐랩스 음성합성",
+    "Make": "메이크",
+    "Dify": "디파이",
+    "n8n": "엔에이트엔",
+    "Zapier": "재피어",
+    "Manus": "마누스",
+    "DeepL": "딥엘 번역기",
+    "Consensus": "컨센서스",
+    "NotebookLM": "노트북엘엠 구글",
+    "AlphaXiv": "알파카이브 논문",
+    "크랙": "Crack 뤼튼",
+    "캐릭터.AI": "캐릭터AI Character",
+    "뤼튼": "Wrtn",
+    "Lilys AI": "릴리스",
+    "허깅페이스": "HuggingFace 허깅",
+    "Replicate": "레플리케이트",
+    "Fal AI": "팔에이아이",
+    "Tost AI": "토스트에이아이",
+    "Groq": "그로크",
+    "Cerebras": "세레브라스",
+    "Together AI": "투게더에이아이",
+    "Pinokio": "피노키오",
+    "ComfyUI": "컴피유아이 컴피",
+    "Ollama": "올라마",
+    "LM Studio": "엘엠스튜디오",
+    "Firecrawl": "파이어크롤",
+    "Anifusion": "애니퓨전",
+    "Novel AI": "노벨에이아이 노벨AI",
+    "Story Tribe": "스토리트라이브",
+    "Suno": "수노",
+    "Udio": "유디오",
+    "MusicFX": "뮤직에프엑스 구글"
+};
+
+// ============================================================
 // Rendering
 // ============================================================
 function getPricingBadge(pricing) {
@@ -1331,7 +1442,10 @@ function renderGrid() {
     categories.forEach(cat => {
         const catTools = tools.filter(t => {
             if (t.category !== cat.id) return false;
-            if (search && !t.name.toLowerCase().includes(search) && !t.identity.toLowerCase().includes(search)) return false;
+            if (search) {
+                const ko = (koAliases[t.name] || "").toLowerCase();
+                if (!t.name.toLowerCase().includes(search) && !t.identity.toLowerCase().includes(search) && !ko.includes(search)) return false;
+            }
             return true;
         });
         if (catTools.length === 0) return;
